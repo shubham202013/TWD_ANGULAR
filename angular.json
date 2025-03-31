@@ -79,7 +79,8 @@
               "buildTarget": "demo-project:build:production"
             },
             "development": {
-              "buildTarget": "demo-project:build:development"
+              "buildTarget": "demo-project:build:development",
+              "prebundle": { "exclude": ["my-lib" ] }
             }
           },
           "defaultConfiguration": "development"

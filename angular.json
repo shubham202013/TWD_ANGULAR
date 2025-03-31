@@ -7,8 +7,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-      "style": "scss"
-    }
+          "style": "scss"
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -74,13 +74,15 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "prebundle": false
+          },
           "configurations": {
             "production": {
               "buildTarget": "demo-project:build:production"
             },
             "development": {
-              "buildTarget": "demo-project:build:development",
-              "prebundle": { "exclude": ["my-lib" ] }
+              "buildTarget": "demo-project:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -108,7 +110,6 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-
             ]
           }
         }

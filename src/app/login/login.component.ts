@@ -25,16 +25,16 @@ export class LoginComponent {
 
       console.log('Email:', this.email);
       console.log('Password:', this.password);
-      this.authService.login(this.email, this.password).subscribe(
-        (response) => {
-          localStorage.setItem('authToken', response.data.token.token);
-          this.router.navigate(['/dashboard']);
-          // console.log('Response:', response);
-        },
-        (error) => {
-          console.log('Error:', error)
-        }
-      );
+      // this.authService.login(this.email, this.password).subscribe(
+      //   (response) => {
+      //     localStorage.setItem('authToken', response.data.token.token);
+      //     this.router.navigate(['/dashboard']);
+      //     // console.log('Response:', response);
+      //   },
+      //   (error) => {
+      //     console.log('Error:', error)
+      //   }
+      // );
     }
 
   }

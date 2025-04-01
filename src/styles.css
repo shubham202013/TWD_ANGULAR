@@ -1190,6 +1190,9 @@
     .pt-48 {
       padding-top: calc(var(--spacing) * 48);
     }
+    .pt-27 {
+      padding-top: calc(var(--spacing) * 27);
+    }
     .pt-\[120px\] {
       padding-top: 120px;
     }

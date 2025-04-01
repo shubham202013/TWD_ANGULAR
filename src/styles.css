@@ -2346,7 +2346,7 @@
     }
     .dark\:bg-\[\#131B4D\] {
       &:is(.dark *) {
-        background-color: #131B4D;
+        background-color: #4e0337;
       }
     }
     .dark\:bg-\[\#272E5C\] {
@@ -2356,7 +2356,7 @@
     }
     .dark\:bg-\[\#14102C\] {
       &:is(.dark *) {
-        background-color: #14102C;
+        background-color: #4e0337;
       }
     }
     .dark\:bg-black {
@@ -2371,7 +2371,7 @@
     }
     .dark\:bg-dark {
       &:is(.dark *) {
-        background-color: var(--color-dark);
+        background-color: #4e0337;
       }
     }
     .dark\:bg-dark\/80 {

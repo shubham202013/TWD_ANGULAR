@@ -15,6 +15,8 @@ export class LoginComponent {
 
   email: string = '';
   password: string = '';
+  loading: boolean = false;
+  errorMessage:string = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -25,16 +27,31 @@ export class LoginComponent {
 
       console.log('Email:', this.email);
       console.log('Password:', this.password);
-      // this.authService.login(this.email, this.password).subscribe(
-      //   (response) => {
-      //     localStorage.setItem('authToken', response.data.token.token);
-      //     this.router.navigate(['/dashboard']);
-      //     // console.log('Response:', response);
-      //   },
-      //   (error) => {
-      //     console.log('Error:', error)
-      //   }
-      // );
+      this.loading = true;
+      this.authService.login(this.email, this.password).subscribe(
+        (response) => {
+          this.loading = false;
+          // debugger
+          if (response.success == false) {
+            this.errorMessage = response.message;
+          
+            console.log('Error:', this.errorMessage)
+          }else{
+            // debugger
+            localStorage.setItem('authToken', response.data.token.token);
+            const redirect = this.authService.getRedirectUrl() || '/dashboard'; // Redirect to stored URL or dashboard
+            this.authService.setRedirectUrl(null) // Clear stored URL
+            this.router.navigate([redirect]);
+          }
+          // console.log('Response:', response);
+        },
+        (error) => {
+          this.loading = false;
+          this.errorMessage = 'Invalid credentials. Please try again.';
+          
+          console.log('Error:', error)
+        }
+      );
     }
 
   }

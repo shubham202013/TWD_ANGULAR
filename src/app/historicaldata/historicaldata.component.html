@@ -1,53 +1,124 @@
+<app-navbar></app-navbar>
 
-    <app-navbar></app-navbar>
+<div class="container relative z-10 pt-27 pb-28">
 
-    <div class="container relative z-10 pt-27 pb-28">
-        
-        <h1 class="mb-8 text-2xl font-bold text-dark dark:text-white sm:text-[34px] lg:text-2xl xl:text-[34px]">
-            DOWNLOAD YOUR HISTORICAL DATA WITH ONE CLICK</h1>
-        <div class="w-full px-4">
-            <div class="px-8 py-12 bg-white rounded-md sm:14 wow fadeInUp dark:bg-dark" data-wow-delay="0s">
+    <h1 class="mb-8 text-2xl font-bold text-dark dark:text-white sm:text-[34px] lg:text-2xl xl:text-[34px]">
+        DOWNLOAD YOUR HISTORICAL DATA WITH ONE CLICK</h1>
+    <div class="w-full px-4">
+        <div class="px-8 py-12 bg-white rounded-md sm:14 wow fadeInUp dark:bg-dark" data-wow-delay="0s">
 
-                <form (submit)="fetchDataAndDownload()"> 
-                    <div class="mb-2">
-                        <label for="symbolSelect" class="block mb-2 text-sm font-medium text-dark dark:text-white">
-                            Symbol* </label>
-                        <select id="symbolSelect"
-                            class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
-                            name="symbol" [(ngModel)]="symbol">
-                            <option *ngFor="let s of ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT', 'BNBUSDT']" [value]="s">{{ s }}</option>
+            <form (submit)="fetchDataAndDownload()">
+                <div class="mb-2">
+                    <label for="symbolSelect" class="block mb-2 text-sm font-medium text-dark dark:text-white">
+                        Symbol* </label>
+                    <select id="symbolSelect"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="symbol" [(ngModel)]="symbol">
+                        <option *ngFor="let s of ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT', 'BNBUSDT']" [value]="s">{{
+                            s }}</option>
 
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label for="timeframeSelect" class="block mb-2 text-sm font-medium text-dark dark:text-white">
-                            Timeframe* </label>
-                        <select id="timeframeSelect"
-                            class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
-                            name="timeframe" [(ngModel)]="timeframe">
-                            <option value="1m">1 MIN</option>
-                            <option value="5m">5 MIN</option>
-                            <option value="15m">15 MIN</option>
-                            <option value="1h">1 HOUR</option>
-                            <option value="4h">4 HOUR</option>
-                            <option value="1d">1 DAY</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label for="startDate" class="block mb-2 text-sm font-medium text-dark dark:text-white"> Start
-                            Date* </label>
-                        <input type="date" id="startDate"
-                            class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
-                            name="startDate" [(ngModel)]="startDate" max="">
-                        <small class="text-muted dark:text-white">Date must not be more than 365 days from today</small>
-                    </div>
-                    <div>
-                        <button type="submit"
-                            class="w-full p-3 text-base font-semibold text-center text-white rounded-full bg-primary hover:bg-primary/90 dark:bg-white dark:text-black dark:hover:bg-primary/90">
-                            Download
-                        </button>
-                    </div>
-                </form>
-            </div>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="timeframeSelect" class="block mb-2 text-sm font-medium text-dark dark:text-white">
+                        Timeframe* </label>
+                    <select id="timeframeSelect"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="timeframe" [(ngModel)]="timeframe">
+                        <option value="1m">1 MIN</option>
+                        <option value="5m">5 MIN</option>
+                        <option value="15m">15 MIN</option>
+                        <option value="1h">1 HOUR</option>
+                        <option value="4h">4 HOUR</option>
+                        <option value="1d">1 DAY</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="startDate" class="block mb-2 text-sm font-medium text-dark dark:text-white"> Start
+                        Date* </label>
+                    <input type="date" id="startDate"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="startDate" [(ngModel)]="startDate" max="">
+                    <small class="text-muted dark:text-white">Date must not be more than 365 days from today</small>
+                </div>
+                <div>
+                    <button type="submit"
+                        class="w-full p-3 text-base font-semibold text-center text-white rounded-full bg-primary hover:bg-primary/90 dark:bg-white dark:text-black dark:hover:bg-primary/90">
+                        Download
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+
+    <div class="w-full px-4 pt-10">
+        <button
+            class="w-full p-3 text-base font-semibold text-center text-white rounded-full bg-primary hover:bg-primary/90 dark:bg-white dark:text-black dark:hover:bg-primary/90"
+            (click)="showQueryForm = !showQueryForm">
+            WANT MORE DATA - RAISE QUERY
+        </button>
+    </div>
+
+    <div class="w-full px-4" *ngIf="showQueryForm">
+        <div class="px-8 py-12 bg-white rounded-md sm:14 wow fadeInUp dark:bg-dark" data-wow-delay="0s">
+
+            <form (ngSubmit)="fetchDataAndSubmitForm(queryForm)" [formGroup]="queryForm">
+                <div class="mb-2">
+                    <label for="symbolSelect" class="block mb-2 text-sm font-medium text-dark dark:text-white">
+                        Symbol* </label>
+                    <select id="symbolSelect"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="symbol" [formControl]="$any(queryForm).controls['qsymbol']">
+                        <option *ngFor="let s of ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT', 'BNBUSDT']" [value]="s">{{
+                            s }}</option>
+
+                    </select>
+                    <span *ngIf="queryForm.get('qsymbol')?.errors?.['required']">This Field is required</span>
+                </div>
+                <div class="mb-2">
+                    <label for="timeframeSelect" class="block mb-2 text-sm font-medium text-dark dark:text-white">
+                        Timeframe* </label>
+                    <select id="timeframeSelect"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="timeframe" [formControl]="$any(queryForm).controls['qtimeframe']">
+                        <option value="1m">1 MIN</option>
+                        <option value="5m">5 MIN</option>
+                        <option value="15m">15 MIN</option>
+                        <option value="1h">1 HOUR</option>
+                        <option value="4h">4 HOUR</option>
+                        <option value="1d">1 DAY</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="startDate" class="block mb-2 text-sm font-medium text-dark dark:text-white"> Start
+                        Date* </label>
+                    <input type="date" id="startDate"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="startDate" [formControl]="$any(queryForm).controls['qstartDate']" max="">
+                    <span *ngIf="queryForm.get('qsymbol')?.errors?.['required']">This Field is required</span>
+                </div>
+                <div class="mb-2">
+                    <label for="endDate" class="block mb-2 text-sm font-medium text-dark dark:text-white"> End
+                        Date* </label>
+                    <input type="date" id="endDate"
+                        class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5"
+                        name="endDate" [formControl]="$any(queryForm).controls['qendDate']" max="">
+                    <span *ngIf="queryForm.get('qsymbol')?.errors?.['required']">This Field is required</span>
+                </div>
+                <div class="mb-2">
+                    <label for="email" class="block mb-2 text-sm font-medium text-dark dark:text-white"> Your Email </label>
+                    <input type="email" name="email" placeholder="Enter your Email" [formControl]="$any(queryForm).controls['qemail']"
+                      class="w-full rounded-md border border-[#E9E9E9]/50 py-3 px-5 text-base font-medium text-body-color outline-hidden focus:border-primary dark:border-[#E9E9E9]/20 dark:bg-white/5" />
+                  </div>
+                  <span *ngIf="queryForm.get('qemail')?.errors?.['required'] && isSubmit" style="color: white;">This field is required</span>
+                <div>
+                    <button type="submit" 
+                        class="w-full p-3 text-base font-semibold text-center text-white rounded-full bg-primary hover:bg-primary/90 dark:bg-white dark:text-black dark:hover:bg-primary/90">
+                        Download
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

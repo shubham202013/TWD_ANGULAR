@@ -5,7 +5,7 @@
         }
       "
     :class="scrolledFromTop ? 'bg-white/80 dark:bg-dark/80  shadow-sticky backdrop-blur-xs ' : ' bg-transparent dark:bg-transparent' "
-    class="fixed top-0 z-50 flex items-center w-full">
+    class="fixed top-0 z-50 flex items-center w-full" style="background: linear-gradient(135deg, #1A0129, #800080, #a33a73);">
     <div class="container">
       <div class="relative flex items-center justify-between -mx-4">
         <div class="max-w-full px-4 w-60">
@@ -117,9 +117,13 @@
                 </label>
               </div> -->
             <div class="hidden sm:flex">
-              <a routerLink="/login"
+              <a routerLink="/login" *ngIf="!isLoggedIn()"
                 class="flex items-center justify-center rounded-full border border-body-color-2 py-[9px] px-8 text-base font-semibold text-body-color-2 transition-all hover:border-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-primary lg:px-4 xl:px-8">
                 Sign In
+              </a>
+              <a routerLink="/login" *ngIf="isLoggedIn()" (click)="logout()"
+                class="flex items-center justify-center rounded-full border border-body-color-2 py-[9px] px-8 text-base font-semibold text-body-color-2 transition-all hover:border-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-primary lg:px-4 xl:px-8">
+                Log Out
               </a>
             </div>
           </div>

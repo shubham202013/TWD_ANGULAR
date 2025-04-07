@@ -9,9 +9,13 @@
     <div class="container">
       <div class="relative flex items-center justify-between -mx-4">
         <div class="max-w-full px-4 w-60">
-          <a href="index.html" :class="scrolledFromTop && 'py-4! lg:py-2!' " class="block w-full py-6 lg:py-5">
+          <a routerLink="/" :class="scrolledFromTop && 'py-4! lg:py-2!' " class="block w-full py-6 lg:py-5" style="display: flex; color: white;">
             <!-- <img src="src/images/logo/logo.svg" alt="logo" class="w-full dark:hidden" /> -->
-            <img src="src/images/logo/logo-white.svg" alt="logo" class="hidden w-full dark:block" />
+            <img src="src/images/logo/brand-logo.png" alt="logo" class="hidden w-full dark:block" style="height: 50px; width: 50px;"/>
+            <div style="display: grid;" class="px-4">
+              <span>Automate</span>
+              <span>Algo</span>
+            </div>
           </a>
         </div>
         <div class="flex items-center justify-end w-full px-4">
@@ -76,7 +80,7 @@
                   </div>
                 </li>
                 <li>
-                  <a href="#pricing"
+                  <a routerLink="/pricing"
                     class="flex py-2 text-lg font-semibold scroll-menu text-body-color-2 hover:text-primary dark:text-body-color dark:hover:text-white lg:ml-7 lg:inline-flex lg:py-5 xl:ml-10 2xl:ml-12">
                     Pricing
                   </a>
@@ -90,13 +94,13 @@
                 <li>
                   <a href="#aboutus"
                     class="flex py-2 text-lg font-semibold scroll-menu text-body-color-2 hover:text-primary dark:text-body-color dark:hover:text-white lg:ml-7 lg:inline-flex lg:py-5 xl:ml-10 2xl:ml-12">
-                    About US
+                    About Us
                   </a>
                 </li>
               </ul>
             </nav>
           </div>
-          <div class="flex justify-end pr-16 lg:pr-0 xl:pl-12 2xl:pl-20">
+          <div class="flex justify-end pr-16 lg:pr-0">
             <!-- <div class="mr-4">
                 <label for="darkToggler" class="flex h-11 w-20 cursor-pointer items-center justify-center rounded-full bg-light-bg dark:bg-[#1E2763]">
                   <input type="checkbox" name="darkToggler" id="darkToggler" class="sr-only" aria-label="darkToggler" />
@@ -118,8 +122,12 @@
               </div> -->
             <div class="hidden sm:flex">
               <a routerLink="/login" *ngIf="!isLoggedIn()"
-                class="flex items-center justify-center rounded-full border border-body-color-2 py-[9px] px-8 text-base font-semibold text-body-color-2 transition-all hover:border-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-primary lg:px-4 xl:px-8">
+                class="flex items-center mr-2 justify-center rounded-full border border-body-color-2 py-[9px] px-8 text-base font-semibold text-body-color-2 transition-all hover:border-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-primary lg:px-4 xl:px-8">
                 Sign In
+              </a>
+              <a routerLink="/signup" *ngIf="!isLoggedIn()"
+                class="flex items-center justify-center rounded-full border border-body-color-2 py-[9px] px-8 text-base font-semibold text-body-color-2 transition-all hover:border-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-primary lg:px-4 xl:px-8">
+                Sign Up
               </a>
               <a routerLink="/login" *ngIf="isLoggedIn()" (click)="logout()"
                 class="flex items-center justify-center rounded-full border border-body-color-2 py-[9px] px-8 text-base font-semibold text-body-color-2 transition-all hover:border-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-primary lg:px-4 xl:px-8">

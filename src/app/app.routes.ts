@@ -4,6 +4,7 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { authGuard } from './auth.guard';
 import { HistoricaldataComponent } from './historicaldata/historicaldata.component';
+import { PricingComponent } from './pricing/pricing.component';
 
 export const routes: Routes = [
 
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'data', component: HistoricaldataComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'pricing', component: PricingComponent },
   { path: '**', redirectTo: 'dashboard' } 
 
 ];

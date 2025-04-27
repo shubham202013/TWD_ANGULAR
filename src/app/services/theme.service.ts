@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
-  constructor() {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ensureLightTheme() {
-    // Set HTML root element to light mode class
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
+    // Only manipulate DOM when in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
   }
 } 

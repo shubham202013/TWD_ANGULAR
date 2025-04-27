@@ -1,0 +1,759 @@
+// Variables
+$text-light: #fff;
+$primary-color: #4f46e5; // Updated to a modern indigo color
+$primary-hover: #4338ca; // Darker shade for hover
+$background-color: #f8fafc; // New light background
+$form-bg: #ffffff; // New form background
+$input-bg: #ffffff; // New input background
+$input-border: #e2e8f0; // New input border color
+$text-primary: #1e293b;      // Dark text for headings
+$text-secondary: #64748b;    // Secondary text color
+$text-muted: #94a3b8;       // Muted text for less emphasis
+
+.webhook-section {
+  min-height: calc(100vh - 64px); // Adjust for navbar height
+  padding: 2rem 1rem;
+  background-color: $background-color; // Added background color
+}
+
+.webhook-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.builder-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    color: $text-primary;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.webhook-form {
+  background: $form-bg;
+  border: 1px solid $input-border;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.control-group {
+  label {
+    display: block;
+    color: $text-primary;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.webhook-input,
+.webhook-select {
+  width: 100%;
+  height: 40px;
+  padding: 0.5rem 1rem;
+  background: $input-bg;
+  border: 1px solid $input-border;
+  border-radius: 4px;
+  color: $text-primary;
+  font-size: 0.875rem;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.webhook-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+
+  option {
+    background-color: $form-bg;
+    color: $text-primary;
+    padding: 0.5rem;
+  }
+}
+
+.risk-acknowledgment {
+  background: #fff7ed; // Warm background for risk section
+  border: 1px solid #ffedd5;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.risk-message {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .warning-icon {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+  }
+
+  p {
+    color: #9a3412; // Warm brown color for risk message
+    font-size: 0.875rem;
+    line-height: 1.5;
+    opacity: 1;
+    margin: 0;
+  }
+}
+
+.acknowledgment-check {
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #9a3412;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+      accent-color: $primary-color;
+    }
+  }
+}
+
+.create-webhook-button {
+  width: 100%;
+  height: 40px;
+  background: $primary-color;
+  color: $text-light;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: $text-secondary;
+  }
+
+  &:hover:not(:disabled) {
+    background: $primary-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .webhook-section {
+    padding: 1rem;
+  }
+
+  .webhook-form {
+    padding: 1.5rem;
+  }
+
+  .form-controls {
+    gap: 1rem;
+  }
+}
+
+// OTP Popup Styles
+.otp-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.otp-popup {
+  background: #1a1a1a;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  animation: popup 0.3s ease-out;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.otp-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .security-icon {
+      width: 24px;
+      height: 24px;
+      color: $primary-color;
+      flex-shrink: 0;
+    }
+
+    h3 {
+      color: #fff;
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.otp-popup-content {
+  padding: 1.5rem;
+}
+
+.verification-section {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    color: #fff;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .helper-text {
+    color: $text-secondary;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.code-input-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.code-input {
+  flex: 1;
+  height: 40px;
+  padding: 0 1rem;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  letter-spacing: 0.25em;
+  text-align: center;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+}
+
+.resend-button {
+  height: 40px;
+  padding: 0 1rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  color: $primary-color;
+  font-size: 0.875rem;
+  cursor: pointer;
+  min-width: 80px;
+  transition: all 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: $text-secondary;
+  }
+
+  &:hover:not(:disabled) {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+
+  .error-icon {
+    font-size: 1rem;
+  }
+
+  p {
+    color: #dc2626; // Bright red for errors
+    font-size: 0.875rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  button {
+    flex: 1;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.submit-button {
+      background: $primary-color;
+      color: $text-light;
+      border: none;
+      
+      &:hover:not(:disabled) {
+        background: $primary-hover;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+    }
+
+    &.cancel-button {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: $text-primary;
+
+      &:hover {
+        background: #e2e8f0;
+        border-color: #cbd5e1;
+      }
+    }
+  }
+}
+
+// Success Popup Styles
+.success-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.success-popup {
+  background: #1a1a1a;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  animation: popup 0.3s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 1;
+    line-height: 0;
+
+    &::before {
+      content: "×";
+      display: block;
+      height: 24px;
+      line-height: 22px;
+    }
+
+    span {
+      display: none;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.success-content {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  max-height: calc(80vh - 3rem);
+  overflow-y: auto;
+
+  // Custom scrollbar styling for content
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+.success-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto 1.5rem;
+  
+  svg {
+    width: 64px;
+    height: 64px;
+    color: #00C853; // Green color for success
+  }
+}
+
+h2 {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+}
+
+.steps {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+
+  .step-number {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  p {
+    color: #fff;
+    font-size: 0.875rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .external-link {
+    color: $primary-color;
+    margin-left: 0.25rem;
+  }
+}
+
+.code-block {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  text-align: left;
+
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #3a3a3a;
+
+    span {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.75rem;
+    }
+  }
+
+  .code-content {
+    padding: 1rem;
+    margin: 0;
+    color: #fff;
+    font-size: 0.875rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  .url-content {
+    padding: 1rem;
+    color: #fff;
+    font-size: 0.875rem;
+    font-family: monospace;
+    word-break: break-all;
+  }
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  color: $text-primary;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    color: $text-secondary;
+  }
+
+  &:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .copied-message {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    pointer-events: none;
+    animation: fadeInOut 1.5s ease-in-out forwards;
+  }
+}
+
+.warning-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: 4px;
+  margin: 1.5rem 0;
+  text-align: left;
+
+  .warning-icon {
+    font-size: 1rem;
+  }
+
+  p {
+    color: #ff3b30;
+    font-size: 0.875rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.copy-url-button {
+  width: 100%;
+  height: 40px;
+  background: $primary-color;
+  color: $text-light;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+
+  &:hover:not(:disabled) {
+    background: $primary-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    background: darken($primary-hover, 5%);
+  }
+
+  // Copied message
+  .copied-message {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    pointer-events: none;
+    animation: fadeInOut 1.5s ease-in-out forwards;
+  }
+
+  // Ripple effect
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: all 0.4s ease-out;
+  }
+
+  &:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: 0s;
+  }
+}
+
+// Add error message style for OTP validation
+.error-message {
+  &.spam-warning {
+    background: rgba(255, 152, 0, 0.1);
+    
+    p {
+      color: #ff9800;
+    }
+  }
+}
+
+// Add keyframes for the copied message
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}

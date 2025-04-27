@@ -20,4 +20,9 @@ export class NavbarComponent {
     this.authService.logout();
     this.router.navigate(['/dashboard']); // Redirect to sign-in page
   }
+  navbarOpen: boolean = false;
+
+  toggleNavbar(): void {
+    this.navbarOpen = !this.navbarOpen;
+  }
 }

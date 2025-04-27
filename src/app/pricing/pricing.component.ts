@@ -9,5 +9,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './pricing.component.scss'
 })
 export class PricingComponent {
+  openGoogleForm(): void {
+    debugger
+    window.open('https://forms.gle/Ss9P8iTw2Sv21SLV7', '_blank');
+  }
+  
 
 }

@@ -173,7 +173,7 @@
       <div class="action-buttons">
         <button 
           class="submit-button" 
-          [disabled]="emailCode.length !== 6 || tfaCode.length !== 6 || isVerifying"
+          [disabled]="emailCode.length !== 6 || isVerifying"
           (click)="verifyOtp()">
           <span *ngIf="!isVerifying">Submit</span>
           <span *ngIf="isVerifying">Verifying...</span>

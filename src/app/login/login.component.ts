@@ -16,43 +16,40 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   loading: boolean = false;
-  errorMessage:string = '';
+  errorMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 
   onSubmit() {
-    if (this.email == '' || this.password == '') {
-      alert('Please fill in all fields');
-    } else {
-
-      console.log('Email:', this.email);
-      console.log('Password:', this.password);
-      this.loading = true;
-      this.authService.login(this.email, this.password).subscribe(
-        (response) => {
-          this.loading = false;
-          // debugger
-          if (response.success == false) {
-            this.errorMessage = response.message;
-          
-            console.log('Error:', this.errorMessage)
-          }else{
-            // debugger
-            localStorage.setItem('authToken', response.data.token.token);
-            const redirect = this.authService.getRedirectUrl() || '/dashboard'; // Redirect to stored URL or dashboard
-            this.authService.setRedirectUrl(null) // Clear stored URL
-            this.router.navigate([redirect]);
-          }
-          // console.log('Response:', response);
-        },
-        (error) => {
-          this.loading = false;
-          this.errorMessage = 'Invalid credentials. Please try again.';
-          
-          console.log('Error:', error)
-        }
-      );
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Please fill in all fields';
+      return;
     }
 
+    this.loading = true;
+    this.errorMessage = '';
+
+    console.log('Email:', this.email);
+    console.log('Password:', this.password);
+    
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success === false) {
+          this.errorMessage = response.message;
+          console.log('Error:', this.errorMessage);
+        } else {
+          localStorage.setItem('authToken', response.data.token.token);
+          const redirect = this.authService.getRedirectUrl() || '/dashboard';
+          this.authService.setRedirectUrl(null); // Clear stored URL
+          this.router.navigate([redirect]);
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.errorMessage = error.error?.message || 'Invalid credentials. Please try again.';
+        console.log('Error:', error);
+      }
+    });
   }
 }

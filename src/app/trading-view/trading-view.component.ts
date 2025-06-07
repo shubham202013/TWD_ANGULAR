@@ -28,12 +28,7 @@ export class TradingViewComponent {
   isLoading: boolean = false;
   isVerifying: boolean = false;
   webhookId: string = '';
-  tradingViewMessage: string = `{
-    "symbol":{{ticker}},
-    "side":{{strategy.order.action}},
-    "qty":{{strategy.order.contracts}},
-    "price":{{close}}
-  }`;
+  tradingViewMessage: string = `{{strategy.order.alert_message}}`;
 
   accounts = ['Main', 'Account 2', 'Account 3'];
   sources = ['Tradingview'];
@@ -73,7 +68,7 @@ export class TradingViewComponent {
   }
 
   verifyOtp() {
-    if (this.emailCode.length !== 6 || this.tfaCode.length !== 6 || !this.webhookId) {
+    if (this.emailCode.length !== 6 || !this.webhookId) {
       return;
     }
 
@@ -82,7 +77,7 @@ export class TradingViewComponent {
 
     const verificationData = {
       email_code: this.emailCode,
-      tfa_code: this.tfaCode,
+      tfa_code: '',
       webhook_id: this.webhookId
     };
 

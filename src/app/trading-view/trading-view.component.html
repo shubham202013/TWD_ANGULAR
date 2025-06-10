@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="builder-header">
       <div class="header-left">
-        <h2>Create Webhook</h2>
+        <h2>{{hasExistingWebhook ? 'Update Webhook' : 'Create Webhook'}}</h2>
       </div>
     </div>
 
@@ -96,9 +96,44 @@
         <button 
           class="create-webhook-button" 
           [disabled]="!isFormValid() || isLoading"
-          (click)="createWebhook()">
-          <span *ngIf="!isLoading">Create Webhook</span>
-          <span *ngIf="isLoading">Creating...</span>
+          (click)="createOrUpdateWebhook()">
+          <span *ngIf="!isLoading">{{hasExistingWebhook ? 'Update Webhook' : 'Create Webhook'}}</span>
+          <span *ngIf="isLoading">{{hasExistingWebhook ? 'Updating...' : 'Creating...'}}</span>
+        </button>
+
+        <!-- JSON Buttons Container -->
+        <div class="json-buttons-container" *ngIf="hasExistingWebhook">
+          <button 
+            class="json-button pine-script"
+            (click)="openPineScriptPopup()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 10V2H10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 6H14V14H6V6Z" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Copy Pine Script JSON
+          </button>
+
+          <button 
+            class="json-button custom"
+            (click)="openCustomJsonPopup()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 10V2H10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 6H14V14H6V6Z" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Copy Custom JSON
+          </button>
+        </div>
+
+        <!-- Copy Webhook URL Button - Only show for existing webhooks -->
+        <button 
+          *ngIf="hasExistingWebhook"
+          class="copy-webhook-button" 
+          (click)="openWebhookUrlPopup()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 10V2H10" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 6H14V14H6V6Z" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Copy Webhook URL
         </button>
       </div>
     </div>
@@ -204,11 +239,11 @@
       </div>
 
       <!-- Success Message -->
-      <h2>Webhook Created Successfully</h2>
-      <p class="subtitle">Run your Webhook with the following steps:</p>
+      <h2>{{hasExistingWebhook ? 'Webhook Updated Successfully' : 'Webhook Created Successfully'}}</h2>
+      <p class="subtitle">{{hasExistingWebhook ? 'Your webhook has been updated with the new settings.' : 'Run your Webhook with the following steps:'}}</p>
 
-      <!-- Steps -->
-      <div class="steps">
+      <!-- Steps - Only show for new webhook creation -->
+      <div class="steps" *ngIf="!hasExistingWebhook">
         <div class="step">
           <span class="step-number">1</span>
           <p>Select your strategy on TradingView <span class="external-link">↗</span></p>
@@ -223,8 +258,8 @@
         </div>
       </div>
 
-      <!-- Trading View Message -->
-      <div class="code-block">
+      <!-- Trading View Message - Only show for new webhook creation -->
+      <div class="code-block" *ngIf="!hasExistingWebhook">
         <div class="code-header">
           <span>Trading View Message</span>
           <button class="copy-button" (click)="copyCode()">
@@ -257,7 +292,7 @@
       <!-- Warning Message -->
       <div class="warning-message">
         <span class="warning-icon">⚠️</span>
-        <p>This webhook URL will not be available once you leave this page. Don't share this with anyone.</p>
+        <p>{{hasExistingWebhook ? 'Your webhook URL remains unchanged. Keep it secure and do not share it with anyone.' : 'This webhook URL will not be available once you leave this page. Don\'t share this with anyone.'}}</p>
       </div>
 
       <!-- Copy URL Button -->
@@ -265,6 +300,114 @@
         Copy Webhook URL
         <span class="copied-message" *ngIf="showCopiedMessage">Copied!</span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Webhook URL Popup -->
+<div class="webhook-url-popup-overlay" *ngIf="showWebhookUrlPopup">
+  <div class="webhook-url-popup">
+    <div class="popup-header">
+      <h3>Webhook URL</h3>
+      <button class="close-button" (click)="closeWebhookUrlPopup()">×</button>
+    </div>
+    <div class="popup-content">
+      <p class="url-description">Copy your webhook URL below:</p>
+      <div class="url-container">
+        <div class="url-text">{{webhookUrl}}</div>
+        <button class="copy-button" (click)="copyWebhookUrl()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 10V2H10" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 6H14V14H6V6Z" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Copy
+          <span class="copied-message" *ngIf="showCopiedMessage">Copied!</span>
+        </button>
+      </div>
+      <div class="warning-message">
+        <span class="warning-icon">⚠️</span>
+        <p>Keep this URL secure and do not share it with anyone.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pine Script JSON Popup -->
+<div class="json-popup-overlay" *ngIf="showPineScriptPopup">
+  <div class="json-popup">
+    <div class="popup-header">
+      <h3>Pine Script JSON</h3>
+      <button class="close-button" (click)="closePineScriptPopup()">×</button>
+    </div>
+    <div class="popup-content">
+      <p class="json-description">Copy the Pine Script JSON format below:</p>
+      <div class="json-container">
+        <pre class="json-text">{{tradingViewMessage}}</pre>
+        <button class="copy-button" (click)="copyPineScript()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 10V2H10" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 6H14V14H6V6Z" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Copy
+          <span class="copied-message" *ngIf="showCopiedMessage">Copied!</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom JSON Popup -->
+<div class="json-popup-overlay" *ngIf="showCustomJsonPopup">
+  <div class="json-popup">
+    <div class="popup-header">
+      <h3>Custom JSON</h3>
+      <button class="close-button" (click)="closeCustomJsonPopup()">×</button>
+    </div>
+    <div class="popup-content">
+      <div class="form-group">
+        <label for="orderType">Order Type</label>
+        <select 
+          id="orderType" 
+          [(ngModel)]="orderType" 
+          class="form-control">
+          <option *ngFor="let type of orderTypes" [value]="type">{{type}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input 
+          type="number" 
+          id="quantity" 
+          [(ngModel)]="quantity" 
+          class="form-control"
+          min="1">
+      </div>
+
+      <div class="form-group">
+        <label for="leverage">Leverage</label>
+        <input 
+          type="number" 
+          id="leverage" 
+          [(ngModel)]="leverage" 
+          class="form-control"
+          min="1">
+      </div>
+
+      <div class="json-preview">
+        <h4>Generated JSON</h4>
+        <div class="json-container">
+          <pre class="json-text">{{getCustomJson()}}</pre>
+          <button class="copy-button" (click)="copyCustomJson()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 10V2H10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 6H14V14H6V6Z" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Copy
+            <span class="copied-message" *ngIf="showCopiedMessage">Copied!</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

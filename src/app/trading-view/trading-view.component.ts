@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { TradingViewService } from '../services/trading-view.service';
+import { TradingViewService, WebhookRequest, WebhookResponse } from '../services/trading-view.service';
 
 @Component({
   selector: 'app-trading-view',
@@ -11,7 +11,7 @@ import { TradingViewService } from '../services/trading-view.service';
   templateUrl: './trading-view.component.html',
   styleUrl: './trading-view.component.scss'
 })
-export class TradingViewComponent {
+export class TradingViewComponent implements OnInit {
   webhookName: string = '';
   apiKey: string = '';
   apiSecret: string = '';
@@ -20,6 +20,7 @@ export class TradingViewComponent {
   showSuccessPopup: boolean = false;
   showCopiedMessage: boolean = false;
   showCodeCopiedMessage: boolean = false;
+  showWebhookUrlPopup: boolean = false;
   emailCode: string = '';
   tfaCode: string = '';
   timeLeft: number = 52;
@@ -29,38 +30,122 @@ export class TradingViewComponent {
   isVerifying: boolean = false;
   webhookId: string = '';
   tradingViewMessage: string = `{{strategy.order.alert_message}}`;
+  hasExistingWebhook: boolean = false;
+  showPineScriptPopup: boolean = false;
+  showCustomJsonPopup: boolean = false;
+  
+  // Form controls for custom JSON
+  orderType: string = 'BUY';
+  quantity: number = 100;
+  leverage: number = 10;
+  
+  // Available options
+  orderTypes: string[] = ['BUY', 'SELL', 'SHORT', 'COVER'];
+  
+  // JSON templates
+  customJsonTemplate = {
+    Close: "{{close}}",
+    Ticker: "{{ticker}}",
+    OrderType: "BUY",
+    ProductType: "market_order",
+    Quantity: 100,
+    leverage: 10,
+    Strategy: "PRO1"
+  };
 
   accounts = ['Main', 'Account 2', 'Account 3'];
   sources = ['Tradingview'];
 
   constructor(private tradingViewService: TradingViewService) {}
 
-  createWebhook() {
+  ngOnInit() {
+    this.fetchExistingWebhook();
+  }
+
+  fetchExistingWebhook() {
+    this.isLoading = true;
+    this.tradingViewService.getWebhookDetails().subscribe({
+      next: (response: WebhookResponse) => {
+        this.isLoading = false;
+        if (response.success && response.data) {
+          this.hasExistingWebhook = true;
+          this.webhookId = response.data.id || '';
+          this.webhookName = response.data.webhook_name || '';
+          this.apiKey = response.data.api_key || '';
+          this.apiSecret = response.data.api_secret || '';
+          this.webhookUrl = response.data.webhook_url || '';
+        }
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.hasExistingWebhook = false;
+        // Don't show error message as this might be a new user
+      }
+    });
+  }
+
+  createOrUpdateWebhook() {
     if (!this.isRiskAcknowledged || !this.webhookName.trim()) {
       return;
     }
 
     this.isLoading = true;
-    const webhookData = {
+    const webhookData: WebhookRequest = {
       webhook_name: this.webhookName.trim(),
       api_key: this.apiKey.trim(),
       api_secret: this.apiSecret.trim()
     };
 
+    if (this.hasExistingWebhook) {
+      this.updateWebhook(webhookData);
+    } else {
+      this.createWebhook(webhookData);
+    }
+  }
+
+  private updateWebhook(webhookData: WebhookRequest) {
     this.tradingViewService.createWebhook(webhookData).subscribe({
-      next: (response) => {
+      next: (response: WebhookResponse) => {
+        this.isLoading = false;
+        if (response.success) {
+          if (response.data) {
+            // Update form data with response
+            this.webhookId = response.data.id || this.webhookId;
+            this.webhookName = response.data.webhook_name || this.webhookName;
+            this.apiKey = response.data.api_key || this.apiKey;
+            this.apiSecret = response.data.api_secret || this.apiSecret;
+            this.webhookUrl = response.data.webhook_url || this.webhookUrl;
+            this.errorMessage = '';
+            // Show success message
+            this.showSuccessPopup = true;
+          }
+        } else {
+          this.errorMessage = response.message || 'Failed to update webhook';
+        }
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'An error occurred while updating the webhook';
+      }
+    });
+  }
+
+  private createWebhook(webhookData: WebhookRequest) {
+    this.tradingViewService.createWebhook(webhookData).subscribe({
+      next: (response: WebhookResponse) => {
         this.isLoading = false;
         if (response.success) {
           if (response.data?.id) {
             this.webhookId = response.data.id;
           }
+          // Only show OTP popup for new webhook creation
           this.showOtpPopup = true;
           this.startTimer();
         } else {
           this.errorMessage = response.message || 'Failed to create webhook';
         }
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isLoading = false;
         this.errorMessage = error.error?.message || 'An error occurred while creating the webhook';
       }
@@ -152,7 +237,17 @@ export class TradingViewComponent {
     }, 1000);
   }
 
+  openWebhookUrlPopup() {
+    this.showWebhookUrlPopup = true;
+  }
+
+  closeWebhookUrlPopup() {
+    this.showWebhookUrlPopup = false;
+    this.showCopiedMessage = false;
+  }
+
   copyWebhookUrl() {
+    navigator.clipboard.writeText(this.webhookUrl);
     this.showCopiedMessage = true;
     setTimeout(() => {
       this.showCopiedMessage = false;
@@ -163,6 +258,50 @@ export class TradingViewComponent {
     this.showCodeCopiedMessage = true;
     setTimeout(() => {
       this.showCodeCopiedMessage = false;
+    }, 1500);
+  }
+
+  openPineScriptPopup() {
+    this.showPineScriptPopup = true;
+  }
+
+  closePineScriptPopup() {
+    this.showPineScriptPopup = false;
+    this.showCopiedMessage = false;
+  }
+
+  openCustomJsonPopup() {
+    this.showCustomJsonPopup = true;
+  }
+
+  closeCustomJsonPopup() {
+    this.showCustomJsonPopup = false;
+    this.showCopiedMessage = false;
+  }
+
+  copyPineScript() {
+    navigator.clipboard.writeText(this.tradingViewMessage);
+    this.showCopiedMessage = true;
+    setTimeout(() => {
+      this.showCopiedMessage = false;
+    }, 1500);
+  }
+
+  getCustomJson(): string {
+    const customJson = {
+      ...this.customJsonTemplate,
+      OrderType: this.orderType,
+      Quantity: this.quantity,
+      leverage: this.leverage
+    };
+    return JSON.stringify([customJson], null, 2);
+  }
+
+  copyCustomJson() {
+    navigator.clipboard.writeText(this.getCustomJson());
+    this.showCopiedMessage = true;
+    setTimeout(() => {
+      this.showCopiedMessage = false;
     }, 1500);
   }
 }

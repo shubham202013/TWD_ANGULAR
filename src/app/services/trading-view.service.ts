@@ -19,8 +19,11 @@ export interface WebhookResponse {
   success: boolean;
   message: string;
   data?: {
-    webhook_url: string;
-    id: string;
+    webhook_url?: string;
+    id?: string;
+    webhook_name?: string;
+    api_key?: string;
+    api_secret?: string;
   };
 }
 
@@ -32,25 +35,31 @@ export class TradingViewService {
 
   constructor(private http: HttpClient) {}
 
-  createWebhook(data: WebhookRequest): Observable<WebhookResponse> {
+  private getHeaders(): HttpHeaders {
     const authToken = localStorage.getItem('authToken');
-    
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Token ${authToken}`
     });
+  }
 
-    return this.http.post<WebhookResponse>(`${this.apiUrl}`, data, { headers });
+  getWebhook(): Observable<WebhookResponse> {
+    return this.http.get<WebhookResponse>(`${this.apiUrl}`, { headers: this.getHeaders() });
+  }
+
+  getWebhookDetails(): Observable<WebhookResponse> {
+    return this.http.get<WebhookResponse>(`${this.apiUrl}/details`, { headers: this.getHeaders() });
+  }
+
+  createWebhook(data: WebhookRequest): Observable<WebhookResponse> {
+    return this.http.post<WebhookResponse>(`${this.apiUrl}`, data, { headers: this.getHeaders() });
+  }
+
+  updateWebhook(webhookId: string, data: WebhookRequest): Observable<WebhookResponse> {
+    return this.http.patch<WebhookResponse>(`${this.apiUrl}/${webhookId}`, data, { headers: this.getHeaders() });
   }
 
   verifyOtp(data: OtpVerificationRequest): Observable<WebhookResponse> {
-    const authToken = localStorage.getItem('authToken');
-    
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
-    });
-
-    return this.http.post<WebhookResponse>(`${this.apiUrl}/verify-otp`, data, { headers });
+    return this.http.post<WebhookResponse>(`${this.apiUrl}/verify-otp`, data, { headers: this.getHeaders() });
   }
 } 

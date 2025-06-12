@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, NavigationEnd } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { TradingViewService, WebhookRequest, WebhookResponse } from '../services/trading-view.service';
+import { AuthService } from '../services/auth.service';
+import { filter, Subscription, combineLatest } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-trading-view',
@@ -11,7 +15,8 @@ import { TradingViewService, WebhookRequest, WebhookResponse } from '../services
   templateUrl: './trading-view.component.html',
   styleUrl: './trading-view.component.scss'
 })
-export class TradingViewComponent implements OnInit {
+export class TradingViewComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
   webhookName: string = '';
   apiKey: string = '';
   apiSecret: string = '';
@@ -56,32 +61,89 @@ export class TradingViewComponent implements OnInit {
   accounts = ['Main', 'Account 2', 'Account 3'];
   sources = ['Tradingview'];
 
-  constructor(private tradingViewService: TradingViewService) {}
+  constructor(
+    private tradingViewService: TradingViewService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.fetchExistingWebhook();
+    // Subscribe to both auth state and navigation events
+    const subscription = combineLatest([
+      this.authService.authState$,
+      this.router.events.pipe(filter(event => event instanceof NavigationEnd))
+    ]).subscribe(([isAuthenticated, _]) => {
+      if (!isAuthenticated) {
+        this.authService.setRedirectUrl('/trading-view');
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Only fetch webhook if we're authenticated
+      if (isAuthenticated) {
+        this.fetchExistingWebhook();
+      }
+    });
+
+    this.subscriptions.push(subscription);
+
+    // Initial check for authentication
+    if (this.authService.isLoggedIn()) {
+      this.fetchExistingWebhook();
+    } else {
+      this.authService.setRedirectUrl('/trading-view');
+      this.router.navigate(['/login']);
+    }
+  }
+
+  ngOnDestroy() {
+    // Clean up all subscriptions
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   fetchExistingWebhook() {
+    if (this.isLoading) return; // Prevent multiple simultaneous calls
+    
     this.isLoading = true;
-    this.tradingViewService.getWebhookDetails().subscribe({
-      next: (response: WebhookResponse) => {
-        this.isLoading = false;
-        if (response.success && response.data) {
-          this.hasExistingWebhook = true;
-          this.webhookId = response.data.id || '';
-          this.webhookName = response.data.webhook_name || '';
-          this.apiKey = response.data.api_key || '';
-          this.apiSecret = response.data.api_secret || '';
-          this.webhookUrl = response.data.webhook_url || '';
+    this.errorMessage = '';
+    
+    const subscription = this.tradingViewService.getWebhookDetails()
+      .pipe(take(1)) // Automatically unsubscribe after first emission
+      .subscribe({
+        next: (response: WebhookResponse) => {
+          this.isLoading = false;
+          if (response.success && response.data) {
+            this.hasExistingWebhook = true;
+            this.webhookId = response.data.id || '';
+            this.webhookName = response.data.webhook_name || '';
+            this.apiKey = response.data.api_key || '';
+            this.apiSecret = response.data.api_secret || '';
+            this.webhookUrl = response.data.webhook_url || '';
+          } else {
+            this.hasExistingWebhook = false;
+            this.resetWebhookData();
+          }
+        },
+        error: (error: any) => {
+          this.isLoading = false;
+          this.hasExistingWebhook = false;
+          this.resetWebhookData();
+          // Only show error if it's not a 404 (no webhook exists yet)
+          if (error.status !== 404) {
+            this.errorMessage = error.error?.message || 'Failed to fetch webhook details';
+          }
         }
-      },
-      error: (error: any) => {
-        this.isLoading = false;
-        this.hasExistingWebhook = false;
-        // Don't show error message as this might be a new user
-      }
-    });
+      });
+
+    this.subscriptions.push(subscription);
+  }
+
+  private resetWebhookData() {
+    this.webhookId = '';
+    this.webhookName = '';
+    this.apiKey = '';
+    this.apiSecret = '';
+    this.webhookUrl = '';
   }
 
   createOrUpdateWebhook() {

@@ -14,11 +14,11 @@ export const routes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'data', component: HistoricaldataComponent },
+  { path: 'data', component: HistoricaldataComponent, canActivate: [authGuard] },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'pricing', component: PricingComponent },
-  { path: 'backtest', component: LegManagerComponent },
-  { path: 'trading-view', component: TradingViewComponent },
+  { path: 'backtest', component: LegManagerComponent, canActivate: [authGuard] },
+  { path: 'trading-view', component: TradingViewComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: 'dashboard' } 
 
 ];

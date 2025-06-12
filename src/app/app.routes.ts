@@ -10,8 +10,7 @@ import { LegManagerComponent } from './leg-manager/leg-manager.component';
 import { TradingViewComponent } from './trading-view/trading-view.component';
 
 export const routes: Routes = [
-
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'data', component: HistoricaldataComponent, canActivate: [authGuard] },
@@ -19,6 +18,5 @@ export const routes: Routes = [
   { path: 'pricing', component: PricingComponent },
   { path: 'backtest', component: LegManagerComponent, canActivate: [authGuard] },
   { path: 'trading-view', component: TradingViewComponent, canActivate: [authGuard] },
-  { path: '**', redirectTo: 'dashboard' } 
-
+  { path: '**', redirectTo: 'dashboard' }
 ];

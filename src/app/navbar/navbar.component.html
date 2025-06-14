@@ -1,7 +1,8 @@
 <header x-data="
         {
           navbarOpen: false,
-          dropdownOpen: false
+          dropdownOpen: false,
+          scrolledFromTop: false
         }
       "
     :class="scrolledFromTop ? 'bg-white/80 shadow-sticky backdrop-blur-xs' : 'bg-transparent'"
